@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import discussion.model.Comment;
 import discussion.model.Post;
-import discussion.model.User;
+import discussion.model.AppUser;
 
 import java.util.List;
 
@@ -13,5 +13,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByPost(Post post);
 
-    List<Comment> findAllByUser(User user);
+    List<Comment> findAllByUser(AppUser user);
 }

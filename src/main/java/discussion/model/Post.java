@@ -44,7 +44,7 @@ public class Post {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="userId", referencedColumnName ="userId" )
-	private User user;
+	private AppUser user;
 	
 	private Instant createDate;
 	
