@@ -18,13 +18,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "token")
-public class VerificationToken {
+@Table(name = "signupToken")
+public class SignupVerificationToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String token;
+    private String signupToken;
 
     @OneToOne(fetch = FetchType.LAZY)
     private AppUser user;
