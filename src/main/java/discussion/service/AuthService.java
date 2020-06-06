@@ -1,6 +1,7 @@
 package discussion.service;
 
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 import javax.transaction.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import discussion.dto.SignupConfirmEmail;
 import discussion.dto.SignupRequest;
+import discussion.exceptions.AppExceptionMessage;
 import discussion.model.AppUser;
 import discussion.model.SignupVerificationToken;
 import discussion.repository.AppUserRepository;
@@ -18,6 +20,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AuthService {
 	private final PasswordEncoder passwordEncoder;
 	
@@ -27,7 +30,6 @@ public class AuthService {
 	
 	private final MailService mailService;
 	
-	@Transactional
 	public void signup(SignupRequest signupRequest) {
 		AppUser appUser=new AppUser();
 		appUser.setUsername(signupRequest.getUsername());
@@ -42,7 +44,7 @@ public class AuthService {
 		mailService.sendMail(new SignupConfirmEmail("Please activate your account",
 				signupRequest.getEmail(),"ThankYou for signing in discussion app, "
 						+"please click on the link below to activate your account "
-						+"http://localhost:8080/api/auth/accountVerification/" + signupToken));
+						+ "http://localhost:8080/api/auth/accountVerification/" + signupToken));
 	}
 
 	private String generateSignupVerificationToken(AppUser appUser) {
@@ -56,4 +58,34 @@ public class AuthService {
 		
 		return signupToken;
 	}
+
+	public void accountVerification(String verificationToken) {
+		Optional<SignupVerificationToken> token=
+				signupVerificationTokenRepository.findBySignupToken(verificationToken);
+				token.orElseThrow(()-> new AppExceptionMessage("Invalid verification token"));
+		
+		enableAppUser(token.get());
+	}
+
+	private void enableAppUser(SignupVerificationToken signupVerificationToken) {
+		String username=signupVerificationToken.getUser().getUsername();
+		AppUser appUser=appUserRepository.findByUsername(username)
+				.orElseThrow(()->new AppExceptionMessage("User not found :"+username));
+		appUser.setEnabled(true);
+		appUserRepository.save(appUser);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

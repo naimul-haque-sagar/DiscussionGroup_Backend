@@ -33,7 +33,7 @@ public class MailService {
 		};
 		try {
 			javaMailSender.send(messagePreparator);
-            log.info("Activation email sent!!");
+            log.info("Activation sign up email sent");
         } catch (MailException e) {
             throw new ActivationEmailException("Exception occurred when sending mail to " + signupConfirmEmail.getRecipient());
         }

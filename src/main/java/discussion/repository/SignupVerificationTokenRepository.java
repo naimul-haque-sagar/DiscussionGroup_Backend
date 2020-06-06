@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface SignupVerificationTokenRepository extends JpaRepository<SignupVerificationToken, Long> {
-    //Optional<SignupVerificationToken> findByToken(String token);
+    Optional<SignupVerificationToken> findBySignupToken(String verificationToken);
 }
