@@ -6,16 +6,25 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import discussion.dto.JwtResponse;
+import discussion.dto.LoginRequest;
 import discussion.dto.SignupConfirmEmail;
 import discussion.dto.SignupRequest;
 import discussion.exceptions.AppExceptionMessage;
 import discussion.model.AppUser;
+import discussion.model.AppUserGroup;
 import discussion.model.SignupVerificationToken;
+import discussion.repository.AppUserGroupRepository;
 import discussion.repository.AppUserRepository;
 import discussion.repository.SignupVerificationTokenRepository;
+import discussion.security.JwtProvider;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -30,6 +39,12 @@ public class AuthService {
 	
 	private final MailService mailService;
 	
+	private final AppUserGroupRepository appUserGroupRepository;
+	
+	private final AuthenticationManager authenticationManager;
+	
+	private final JwtProvider jwtProvider;
+	
 	public void signup(SignupRequest signupRequest) {
 		AppUser appUser=new AppUser();
 		appUser.setUsername(signupRequest.getUsername());
@@ -39,6 +54,13 @@ public class AuthService {
 		appUser.setEnabled(false);
 		
 		appUserRepository.save(appUser);
+		
+		AppUserGroup appUserGroup=new AppUserGroup();
+		appUserGroup.setUsername(signupRequest.getUsername());
+		appUserGroup.setUserGroup("user");
+		
+		appUserGroupRepository.save(appUserGroup);
+		
 		String signupToken=generateSignupVerificationToken(appUser);
 		
 		mailService.sendMail(new SignupConfirmEmail("Please activate your account",
@@ -73,6 +95,16 @@ public class AuthService {
 				.orElseThrow(()->new AppExceptionMessage("User not found :"+username));
 		appUser.setEnabled(true);
 		appUserRepository.save(appUser);
+	}
+
+	public JwtResponse login(LoginRequest loginRequest) {
+		Authentication authentication= authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
+						loginRequest.getPassword()));
+		
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwtToken=jwtProvider.generateJwtToken(authentication);
+		return new JwtResponse(jwtToken,loginRequest.getUsername());
 	}
 	
 	

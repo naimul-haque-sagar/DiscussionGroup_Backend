@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import discussion.dto.JwtResponse;
+import discussion.dto.LoginRequest;
 import discussion.dto.SignupRequest;
 import discussion.service.AuthService;
 import lombok.AllArgsConstructor;
@@ -30,6 +32,11 @@ public class AuthController {
 	public ResponseEntity<String> accountVerification(@PathVariable String verificationToken){
 		authService.accountVerification(verificationToken);
 		return new ResponseEntity<>("Account activated successfully",HttpStatus.OK);
+	}
+	
+	@PostMapping("/login")
+	public JwtResponse userLogin(@RequestBody LoginRequest loginRequest) {
+		return authService.login(loginRequest);
 	}
 
 }
