@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,6 +34,6 @@ public class Comment {
 	private Instant createdDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="userId" ,referencedColumnName = "userId")
-	private AppUser user;
+	@JoinColumn(name="appUserId" ,referencedColumnName = "appUserId")
+	private AppUser appUser;
 }

@@ -30,13 +30,13 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		AppUser appUser=appUserRepository.findByUsername(username)
+		AppUser appUser=appUserRepository.findByAppUsername(username)
 				.orElseThrow(()->new AppExceptionMessage("Username not found"+username));
 		
-		List<AppUserGroup> list=appUserGroupRepository.findByUsername(username);
+		List<AppUserGroup> list=appUserGroupRepository.findByAppUsername(username);
 				
 		
-		return new User(appUser.getUsername(),appUser.getPassword(),appUser.isEnabled(),true,true,true,
+		return new User(appUser.getAppUsername(),appUser.getPassword(),appUser.isEnabled(),true,true,true,
 				getAuthorities(list));
 	}
 
@@ -46,7 +46,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		}
 		Set<SimpleGrantedAuthority> set=new HashSet<>();
 		for(AppUserGroup x:list) {
-			set.add(new SimpleGrantedAuthority(x.getUserGroup().toUpperCase()));
+			set.add(new SimpleGrantedAuthority(x.getAppUserGroup().toUpperCase()));
 		}
 		return set;
 	}

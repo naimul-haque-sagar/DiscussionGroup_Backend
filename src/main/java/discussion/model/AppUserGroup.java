@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 public class AppUserGroup {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long gourpId;
+	private Long id;
 	
-	private String username;
+	private String appUsername;
 	
-	private String userGroup;
+	private String appUserGroup;
 }

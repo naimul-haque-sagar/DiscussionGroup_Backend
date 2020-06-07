@@ -22,13 +22,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Subreddit {
+public class DiscussionSubjects {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank(message="Subreddit name is required")
-	private String name;
+	@NotBlank(message="Discussion Subject name is required")
+	private String subjectName;
 	
 	@NotBlank(message="Description is required")
 	private String description;
@@ -39,5 +39,5 @@ public class Subreddit {
 	private Instant createDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	private AppUser user;
+	private AppUser appUser;
 }

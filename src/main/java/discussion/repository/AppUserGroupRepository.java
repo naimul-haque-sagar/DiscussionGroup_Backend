@@ -8,6 +8,6 @@ import discussion.model.AppUserGroup;
 
 public interface AppUserGroupRepository extends JpaRepository<AppUserGroup, Long>{
 
-	List<AppUserGroup> findByUsername(String username);
+	List<AppUserGroup> findByAppUsername(String username);
 
 }

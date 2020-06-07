@@ -1,6 +1,5 @@
 package discussion.model;
 
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @AllArgsConstructor
@@ -34,6 +32,6 @@ public class Vote {
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private AppUser user;
+    @JoinColumn(name = "appUserId", referencedColumnName = "appUserId")
+    private AppUser appUser;
 }

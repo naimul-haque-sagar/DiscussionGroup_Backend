@@ -47,7 +47,7 @@ public class AuthService {
 	
 	public void signup(SignupRequest signupRequest) {
 		AppUser appUser=new AppUser();
-		appUser.setUsername(signupRequest.getUsername());
+		appUser.setAppUsername(signupRequest.getUsername());
 		appUser.setEmail(signupRequest.getEmail());
 		appUser.setPassword(passwordEncoder.encode(signupRequest.getPassword()));
 		appUser.setCreated(Instant.now());
@@ -56,8 +56,8 @@ public class AuthService {
 		appUserRepository.save(appUser);
 		
 		AppUserGroup appUserGroup=new AppUserGroup();
-		appUserGroup.setUsername(signupRequest.getUsername());
-		appUserGroup.setUserGroup("user");
+		appUserGroup.setAppUsername(signupRequest.getUsername());
+		appUserGroup.setAppUserGroup("user");
 		
 		appUserGroupRepository.save(appUserGroup);
 		
@@ -74,7 +74,7 @@ public class AuthService {
 		
 		SignupVerificationToken signupVerificationToken=new SignupVerificationToken();
 		signupVerificationToken.setSignupToken(signupToken);
-		signupVerificationToken.setUser(appUser);
+		signupVerificationToken.setAppUser(appUser);
 		
 		signupVerificationTokenRepository.save(signupVerificationToken);
 		
@@ -90,8 +90,8 @@ public class AuthService {
 	}
 
 	private void enableAppUser(SignupVerificationToken signupVerificationToken) {
-		String username=signupVerificationToken.getUser().getUsername();
-		AppUser appUser=appUserRepository.findByUsername(username)
+		String username=signupVerificationToken.getAppUser().getAppUsername();
+		AppUser appUser=appUserRepository.findByAppUsername(username)
 				.orElseThrow(()->new AppExceptionMessage("User not found :"+username));
 		appUser.setEnabled(true);
 		appUserRepository.save(appUser);

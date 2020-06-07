@@ -24,10 +24,11 @@ public class SignupVerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String signupToken;
 
     @OneToOne(fetch = FetchType.LAZY)
-    private AppUser user;
+    private AppUser appUser;
 
     private Instant expiryDate;
 }

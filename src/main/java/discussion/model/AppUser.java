@@ -21,10 +21,10 @@ import lombok.NoArgsConstructor;
 public class AppUser {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long userId;
+	private Long appUserId;
 	
-	@NotBlank(message="Username is required")
-	private String username;
+	@NotBlank(message="AppUsername is required")
+	private String appUsername;
 	
 	@NotBlank(message="Password is required")
 	private String password;
