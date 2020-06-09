@@ -37,12 +37,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.authorizeRequests()
 		.antMatchers("/api/auth/**")
 		.permitAll()
-		.antMatchers("/api/discussionSubject/")
-		.permitAll()
 		.anyRequest()
-		.authenticated().and()
-		.sessionManagement()
-		.sessionCreationPolicy(SessionCreationPolicy.STATELESS); 
+		.authenticated();
 		
 		http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 	}

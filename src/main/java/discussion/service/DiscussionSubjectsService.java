@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import discussion.beansMapper.DiscussionSubjectsMapper;
 import org.springframework.stereotype.Service;
 
 import discussion.dto.DiscussionSubjectsDto;
@@ -18,10 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DiscussionSubjectsService {
 	private final DiscussionSubjectsRepository discussionSubjectsRepository;
+	private final DiscussionSubjectsMapper discussionSubjectsMapper;
 	
 	@Transactional
 	public DiscussionSubjectsDto saveDiscussionSubjects(DiscussionSubjectsDto discussionSubjectsDto) {
-		DiscussionSubjects returnedEntity=discussionSubjectsRepository.save(buildDiscussionSubjects(discussionSubjectsDto));
+		DiscussionSubjects returnedEntity=discussionSubjectsRepository.save(discussionSubjectsMapper.mapToModel(discussionSubjectsDto));
 		
 		discussionSubjectsDto.setId(returnedEntity.getId());
 		return discussionSubjectsDto;
@@ -29,20 +31,10 @@ public class DiscussionSubjectsService {
 
 	@Transactional
 	public List<DiscussionSubjectsDto> getAll() {
-		return discussionSubjectsRepository.findAll().stream().map(this::buildDiscussionSubjectsDto)
+		return discussionSubjectsRepository.findAll().stream().map(discussionSubjectsMapper::mapToDto)
 		.collect(Collectors.toList());			
 	}
-	
-	private DiscussionSubjects buildDiscussionSubjects(DiscussionSubjectsDto discussionSubjectsDto) {
-		return DiscussionSubjects.builder().subjectName(discussionSubjectsDto.getSubjectName())
-		.description(discussionSubjectsDto.getDescription()).build();
-	}
-	
-	private DiscussionSubjectsDto buildDiscussionSubjectsDto(DiscussionSubjects discussionSubjects){
-		return DiscussionSubjectsDto.builder().subjectName(discussionSubjects.getSubjectName())
-				.id(discussionSubjects.getId()).numberOfPosts(discussionSubjects.getPosts().size())
-				.build();
-	}
+
 	
 
 }
