@@ -10,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -106,18 +108,12 @@ public class AuthService {
 		String jwtToken=jwtProvider.generateJwtToken(authentication);
 		return new JwtResponse(jwtToken,loginRequest.getUsername());
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Transactional
+	public AppUser currentUser(){
+		User user= (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return appUserRepository.findByAppUsername(user.getUsername())
+				.orElseThrow(()->new UsernameNotFoundException("User name not found"+user.getUsername()));
+	}
 	
 }

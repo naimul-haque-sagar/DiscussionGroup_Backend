@@ -1,11 +1,13 @@
 package discussion.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import discussion.beansMapper.DiscussionSubjectsMapper;
+import discussion.exceptions.AppExceptionMessage;
 import org.springframework.stereotype.Service;
 
 import discussion.dto.DiscussionSubjectsDto;
@@ -35,6 +37,8 @@ public class DiscussionSubjectsService {
 		.collect(Collectors.toList());			
 	}
 
-	
-
+    public DiscussionSubjectsDto getDiscussionSubject(Long id) {
+    	return discussionSubjectsMapper.mapToDto(discussionSubjectsRepository.findById(id)
+				.orElseThrow(()-> new AppExceptionMessage("Error occured while retriving single DiscussionSubject")));
+	}
 }
