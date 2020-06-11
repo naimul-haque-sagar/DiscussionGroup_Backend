@@ -12,6 +12,8 @@ import org.mapstruct.Mapping;
 public interface PostMapper {
     @Mapping(target = "createDate", expression = "java(java.time.Instant.now())")
     @Mapping(target="description", source = "postRequest.description")
+    @Mapping(target = "discussionSubjects", source="discussionSubjects")
+    @Mapping(target = "appUser", source = "appUser")
     Post mapToPost(PostRequest postRequest,DiscussionSubjects discussionSubjects,AppUser appUser);
 
     @Mapping(target = "id", source = "postId")

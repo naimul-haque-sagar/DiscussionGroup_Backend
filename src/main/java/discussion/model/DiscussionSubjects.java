@@ -3,13 +3,7 @@ package discussion.model;
 import java.time.Instant;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
@@ -39,5 +33,6 @@ public class DiscussionSubjects {
 	private Instant createDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "appUserId" ,referencedColumnName = "appUserId")
 	private AppUser appUser;
 }

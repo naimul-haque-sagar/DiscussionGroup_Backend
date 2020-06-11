@@ -21,15 +21,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DiscussionSubjectsService {
 	private final DiscussionSubjectsRepository discussionSubjectsRepository;
+
 	private final DiscussionSubjectsMapper discussionSubjectsMapper;
-	
+
+	private final AuthService authService;
+
 	@Transactional
 	public DiscussionSubjectsDto saveDiscussionSubjects(DiscussionSubjectsDto discussionSubjectsDto) {
-		DiscussionSubjects returnedEntity=discussionSubjectsRepository.save(discussionSubjectsMapper.mapToModel(discussionSubjectsDto));
-		
-		discussionSubjectsDto.setId(returnedEntity.getId());
-		return discussionSubjectsDto;
+		DiscussionSubjects discussionSubjects=discussionSubjectsRepository.save(discussionSubjectsMapper.mapToModel(discussionSubjectsDto,authService.currentUser()));
+		if(discussionSubjects.getPosts()==null){
+			discussionSubjectsDto.setId(discussionSubjects.getId());
+			return discussionSubjectsDto;
+		}
+		return discussionSubjectsMapper.mapToDto(discussionSubjects);
 	}
+
+	//update discussion subject
 
 	@Transactional
 	public List<DiscussionSubjectsDto> getAll() {
@@ -37,6 +44,7 @@ public class DiscussionSubjectsService {
 		.collect(Collectors.toList());			
 	}
 
+	@Transactional
     public DiscussionSubjectsDto getDiscussionSubject(Long id) {
     	return discussionSubjectsMapper.mapToDto(discussionSubjectsRepository.findById(id)
 				.orElseThrow(()-> new AppExceptionMessage("Error occured while retriving single DiscussionSubject")));

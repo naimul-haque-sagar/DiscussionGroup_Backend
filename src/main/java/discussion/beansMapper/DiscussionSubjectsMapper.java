@@ -1,6 +1,7 @@
 package discussion.beansMapper;
 
 import discussion.dto.DiscussionSubjectsDto;
+import discussion.model.AppUser;
 import discussion.model.DiscussionSubjects;
 import discussion.model.Post;
 import org.mapstruct.InheritInverseConfiguration;
@@ -18,7 +19,8 @@ public interface DiscussionSubjectsMapper {
         return numberOfPosts.size();
     }
 
-    @InheritInverseConfiguration
     @Mapping(target = "posts" ,ignore = true)
-    DiscussionSubjects mapToModel(DiscussionSubjectsDto discussionSubjectsDto);
+    @Mapping(target = "createDate",expression = "java(java.time.Instant.now())")
+    @Mapping(target = "appUser",source = "appUser")
+    DiscussionSubjects mapToModel(DiscussionSubjectsDto discussionSubjectsDto, AppUser appUser);
 }

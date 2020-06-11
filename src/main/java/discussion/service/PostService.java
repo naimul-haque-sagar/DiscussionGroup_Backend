@@ -39,9 +39,8 @@ public class PostService {
     public void save(PostRequest postRequest) {
         DiscussionSubjects discussionSubjects=discussionSubjectsRepository.findBySubjectName(postRequest.getDiscussionSubjectsName())
                 .orElseThrow(()->new DiscussionSubjectsException("Discussion subjects not found"+postRequest.getDiscussionSubjectsName()));
-        System.out.println("my view   "+discussionSubjects);
-        System.out.println("my User    "+authService.currentUser());
         postRepository.save(postMapper.mapToPost(postRequest,discussionSubjects,authService.currentUser()));
+        //should update discussion subjects while saving post
     }
 
     @Transactional
