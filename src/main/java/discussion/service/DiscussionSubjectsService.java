@@ -36,8 +36,6 @@ public class DiscussionSubjectsService {
 		return discussionSubjectsMapper.mapToDto(discussionSubjects);
 	}
 
-	//update discussion subject
-
 	@Transactional
 	public List<DiscussionSubjectsDto> getAll() {
 		return discussionSubjectsRepository.findAll().stream().map(discussionSubjectsMapper::mapToDto)
