@@ -32,7 +32,6 @@ public class Post {
 	@Lob
 	private String description;
 
-	//should be changed to choiceNumber
 	@Builder.Default
 	private Integer choiceCount=0;
 	
