@@ -27,9 +27,6 @@ public class DiscussionSubjects {
 	@NotBlank(message="Description is required")
 	private String description;
 	
-	@OneToMany(fetch = FetchType.LAZY)
-	private List<Post> posts;
-	
 	private Instant createDate;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

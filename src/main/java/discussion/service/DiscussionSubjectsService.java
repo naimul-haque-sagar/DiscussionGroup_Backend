@@ -29,10 +29,6 @@ public class DiscussionSubjectsService {
 	@Transactional
 	public DiscussionSubjectsDto saveDiscussionSubjects(DiscussionSubjectsDto discussionSubjectsDto) {
 		DiscussionSubjects discussionSubjects=discussionSubjectsRepository.save(discussionSubjectsMapper.mapToModel(discussionSubjectsDto,authService.currentUser()));
-		if(discussionSubjects.getPosts()==null){
-			discussionSubjectsDto.setId(discussionSubjects.getId());
-			return discussionSubjectsDto;
-		}
 		return discussionSubjectsMapper.mapToDto(discussionSubjects);
 	}
 

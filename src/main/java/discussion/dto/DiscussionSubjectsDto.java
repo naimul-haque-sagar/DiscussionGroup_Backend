@@ -13,5 +13,5 @@ public class DiscussionSubjectsDto {
 	private Long id;
 	private String subjectName;
 	private String description;
-	private Integer numberOfPosts;
+	private Long numberOfPosts;
 }
