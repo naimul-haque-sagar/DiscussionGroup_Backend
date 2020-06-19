@@ -19,12 +19,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Vote {
+public class Choice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long voteId;
+    private Long choiceId;
 
-    private VoteType voteType;
+    private Integer choiceType;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)

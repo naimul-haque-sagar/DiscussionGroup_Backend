@@ -31,9 +31,10 @@ public class Post {
 	@Nullable
 	@Lob
 	private String description;
-	
+
+	//should be changed to choiceNumber
 	@Builder.Default
-	private Integer voteCount=0;
+	private Integer choiceCount=0;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="appUserId", referencedColumnName ="appUserId" )
