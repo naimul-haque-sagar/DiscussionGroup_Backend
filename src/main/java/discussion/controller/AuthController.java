@@ -1,5 +1,7 @@
 package discussion.controller;
 
+import discussion.dto.RefreshTokenDto;
+import discussion.service.RefreshTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import discussion.dto.JwtResponse;
+import discussion.dto.AuthenticationResponse;
 import discussion.dto.LoginRequest;
 import discussion.dto.SignupRequest;
 import discussion.service.AuthService;
@@ -21,6 +23,8 @@ import lombok.AllArgsConstructor;
 public class AuthController {
 	
 	private final AuthService authService;
+
+	private final RefreshTokenService refreshTokenService;
 	
 	@PostMapping("/signup")
 	public ResponseEntity<String> signup(@RequestBody SignupRequest signupRequest) {
@@ -35,8 +39,19 @@ public class AuthController {
 	}
 	
 	@PostMapping("/login")
-	public JwtResponse userLogin(@RequestBody LoginRequest loginRequest) {
+	public AuthenticationResponse userLogin(@RequestBody LoginRequest loginRequest) {
 		return authService.login(loginRequest);
+	}
+
+	@PostMapping("/refreshToken")
+	public AuthenticationResponse refreshToken(@RequestBody RefreshTokenDto refreshTokenDto){
+		return authService.validateRefreshTokenAndReGenerateJwtToken(refreshTokenDto);
+	}
+
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(@RequestBody RefreshTokenDto refreshTokenDto){
+		refreshTokenService.deleteRefreshToken(refreshTokenDto.getRefreshToken());
+		return ResponseEntity.status(HttpStatus.OK).body("refresh token deleted");
 	}
 
 }

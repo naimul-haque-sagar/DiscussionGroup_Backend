@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import discussion.dto.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,10 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import discussion.dto.JwtResponse;
-import discussion.dto.LoginRequest;
-import discussion.dto.SignupConfirmEmail;
-import discussion.dto.SignupRequest;
 import discussion.exceptions.AppExceptionMessage;
 import discussion.model.AppUser;
 import discussion.model.AppUserGroup;
@@ -46,6 +43,8 @@ public class AuthService {
 	private final AuthenticationManager authenticationManager;
 	
 	private final JwtProvider jwtProvider;
+
+	private final RefreshTokenService refreshTokenService;
 	
 	public void signup(SignupRequest signupRequest) {
 		AppUser appUser=new AppUser();
@@ -99,14 +98,17 @@ public class AuthService {
 		appUserRepository.save(appUser);
 	}
 
-	public JwtResponse login(LoginRequest loginRequest) {
+	public AuthenticationResponse login(LoginRequest loginRequest) {
 		Authentication authentication= authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
 						loginRequest.getPassword()));
 		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwtToken=jwtProvider.generateJwtToken(authentication);
-		return new JwtResponse(jwtToken,loginRequest.getUsername());
+		return AuthenticationResponse.builder().jwtToken(jwtToken)
+				.refreshToken(refreshTokenService.generateRefreshToken().getToken())
+				.expiresAt(Instant.now().plusMillis(900000))
+				.username(loginRequest.getUsername()).build();
 	}
 
 	@Transactional
@@ -115,5 +117,12 @@ public class AuthService {
 		return appUserRepository.findByAppUsername(user.getUsername())
 				.orElseThrow(()->new UsernameNotFoundException("User name not found"+user.getUsername()));
 	}
-	
+
+	public AuthenticationResponse validateRefreshTokenAndReGenerateJwtToken(RefreshTokenDto refreshTokenDto) {
+		refreshTokenService.validateRefreshToken(refreshTokenDto.getRefreshToken());
+		String token=jwtProvider.generateJwtTokenFromName(refreshTokenDto.getUsername());
+		return AuthenticationResponse.builder().jwtToken(token).refreshToken(refreshTokenDto.getRefreshToken())
+				.expiresAt(Instant.now().plusMillis(900000))
+				.username(refreshTokenDto.getUsername()).build();
+	}
 }

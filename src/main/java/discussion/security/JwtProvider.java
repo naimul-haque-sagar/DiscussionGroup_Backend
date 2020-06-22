@@ -9,6 +9,8 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.time.Instant;
+import java.util.Date;
 
 import javax.annotation.PostConstruct;
 
@@ -38,7 +40,18 @@ public class JwtProvider {
 	public String generateJwtToken(Authentication authentication) {
 		User principal=(User) authentication.getPrincipal();
 		return Jwts.builder().setSubject(principal.getUsername())
-				.signWith(getPrivateKeyFromKeystore()).compact();
+				.setIssuedAt(Date.from(Instant.now()))
+				.signWith(getPrivateKeyFromKeystore())
+				.setExpiration(Date.from(Instant.now().plusMillis(900000)))
+				.compact();
+	}
+
+	public String generateJwtTokenFromName(String name){
+		return Jwts.builder()
+				.setSubject(name).setIssuedAt(Date.from(Instant.now()))
+				.signWith(getPrivateKeyFromKeystore())
+				.setExpiration(Date.from(Instant.now().plusMillis(900000)))
+				.compact();
 	}
 	
 	public boolean validateExtractedJwtKey(String key) {
