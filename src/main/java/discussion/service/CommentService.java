@@ -31,7 +31,6 @@ public class CommentService {
     public void postComment(CommentDto commentDto) {
         Post post=postRepository.findById(commentDto.getPostId()).orElseThrow(()->new AppExceptionMessage("Post not found"));
         commentRepository.save(commentMapper.mapToComment(commentDto,post,
-                //add user by query
                 authService.currentUser()));
 
         //you can send a mail confirmation

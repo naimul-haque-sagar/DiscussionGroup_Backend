@@ -22,6 +22,7 @@ public abstract class DiscussionSubjectsMapper {
     @Autowired
     private DiscussionSubjectsRepository discussionSubjectsRepository;
 
+    @Mapping(target = "id",expression = "java(discussionSubjects.getId())")
     @Mapping(target = "numberOfPosts",expression = "java(countPosts(discussionSubjects.getId()))")
     public abstract DiscussionSubjectsDto mapToDto(DiscussionSubjects discussionSubjects);
 
@@ -30,6 +31,7 @@ public abstract class DiscussionSubjectsMapper {
                 .orElseThrow(()->new AppExceptionMessage("No discussion subject found"))).stream().count();
     }
 
+    @Mapping(target = "id",ignore = true)
     @Mapping(target = "createDate",expression = "java(java.time.Instant.now())")
     @Mapping(target = "appUser",source = "appUser")
     public abstract DiscussionSubjects mapToModel(DiscussionSubjectsDto discussionSubjectsDto, AppUser appUser);
