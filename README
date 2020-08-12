@@ -1,10 +1,29 @@
-Spring discussion group
+Spring discussion group backend
 
 This is a discussion group built using
-
 -->spring boot
--->spring boot jpa
+-->spring boot data jpa
+-->spring security
 -->mail service
 -->thymeleaf
 -->jwt
+-->jwt encryption
+-->mysql
+-->lombok
+-->mapstruct
 -->swagger
+
+After register ,user login to the system and continue to the group
+
+User register is verified through email verification key
+
+For every login it sends a encrypted jwt token
+
+User session is managed by encrypted jwt token
+
+User can create a subject or a group
+
+User can create post ,like ,comment ,upvote ,downvote the post
+
+For every subject or group user can post and others can discuss about this post
+
